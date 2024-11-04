@@ -16,14 +16,35 @@ export default class Write extends Component {
       title: this.state.title,
       content: this.state.content
     }) // 요청을 보냄
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((e) => {
+      // 에러 핸들링
+      console.log(e);
+    });
+  };
+  
+  update = (e) => {
+    e.preventDefault();
+    Axios.post('http://localhost:8000/update', {
+      title: this.state.title,
+      content: this.state.content,
+      id: this.props.boardId // 수정할 글 번호
+    }) // 요청을 보냄
       .then((res) => {
-        console.log(res);
+        this.setState({ // setState 함수를 이용해서
+          title: '', // title 비워주고
+          content: '' // content도 비워준다
+        })
+        this.props.handleCancel();
       })
       .catch((e) => {
         // 에러 핸들링
         console.log(e);
       });
   };
+
   handleChange = (e) => {
     this.setState({
       // title: e.target.value
@@ -44,9 +65,7 @@ export default class Write extends Component {
           <Form.Control as="textarea" name="content" rows={3} onChange={this.handleChange} />
         </Form.Group>
         <div className="d-flex gap-1">
-          <Button variant="primary" type="submit" onClick={this.write}>
-            작성 완료
-          </Button>
+        <Button variant="primary" type="submit" onClick={this.state.isModifyMode ? this.update : this.write}>{this.state.isModifyMode ? '수정완료' : '입력완료'}</Button>
           <Button variant="secondary" type="reset">
             취소
           </Button>
