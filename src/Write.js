@@ -7,8 +7,8 @@ export default class Write extends Component {
   // Update.js를 만들지 않고 수정할 때 사용 예정
   state = {
     isModifyMode: false,
-    title: "",
-    content: "",
+    title: '',
+    content: '',
   };
   write = (e) => {
     e.preventDefault();
@@ -44,6 +44,12 @@ export default class Write extends Component {
         console.log(e);
       });
   };
+
+  datail = () => {
+    /*글 번호에 맞는 데이터 조회,
+    글 결과를 title, content에 반영 그리고 수정 모드를 true로 변경*/
+  }
+  // this.prop.isModifyMode에 변동사항이 생기면 datail 함수 실행, componentDidUpdate 함수로 변동 사항이 있는지 없는지 확인하고 변동사항이 있으면 componentDidUpdate 함수 실행
 
   handleChange = (e) => {
     this.setState({
