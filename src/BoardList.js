@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Form from 'react-bootstrap/Form';
 import Axios from "axios";
 
 /*
@@ -24,7 +25,18 @@ class Board extends Component {
   render() {
     return (
       <tr>
-        <td>1</td>
+        <td>
+          <Form.Check // prettier-ignore
+            type="checkbox"
+            id={`default-checkbox`}
+            value={this.props.id}
+            // 체크가 됐을 때 onCheckboxChange 함수 실행
+            onChange={(e) => {
+              this.props.onCheckboxChange(e.target.checked, e.target.value)
+            }} 
+          />
+        </td>
+        <td>{this.props.id}</td>
         <td>{this.props.title}</td>
         <td>{this.props.registerId}</td>
         <td>{this.props.date}</td>
@@ -36,7 +48,27 @@ class Board extends Component {
 export default class BoardList extends Component {
   state = {
     BoardList: [],
+    checkList: []
   }
+
+  onCheckboxChange = (checked, id) => {
+    // 스프레드 연산자를 이용해 배열을 풀어헤치고
+    const list = [...this.state.checkList];
+    if(checked){
+      if(!list.includes(id)){
+        list.push(id); // 리스트에 밀어 넣고
+      }
+    }else{
+      let idx = list.indexOf(id);
+      list.splice(idx, 1)
+    }
+
+    this.setState({ // setState를 이용해 바꿔 줌
+      checkList:list
+    })
+    console.log(this.state.checkList);
+  }
+
   getList = () => {
     Axios.get("http://localhost:8000/list") // 요청을 보냄
       .then((res) => {
@@ -63,6 +95,7 @@ export default class BoardList extends Component {
         <Table striped bordered hover>
           <thead>
             <tr>
+              <th>선택</th>
               <th>번호</th>
               <th>제목</th>
               <th>작성자</th>
@@ -70,14 +103,15 @@ export default class BoardList extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.BoardList.map((item) => (
-              <Board
-                key={item.BOARD_ID}
-                title={item.BOARD_TITLE}
-                registerId={item.REGISTER_ID}
-                date={item.REGISTER_DATE}
-              />
-            ))}
+            {this.state.BoardList.map(
+              (item) => (<Board
+              key={item.BOARD_ID}
+              id={item.BOARD_ID}
+              title={item.BOARD_TITLE}
+              registerId={item.REGISTER_ID}
+              date={item.REGISTER_DATE}
+              onCheckboxChange={this.onCheckboxChange}
+              />))}
           </tbody>
         </Table>
         <div className="d-flex gap-1">
