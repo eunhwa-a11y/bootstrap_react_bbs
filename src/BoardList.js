@@ -90,6 +90,13 @@ export default class BoardList extends Component {
     this.getList();
   }
 
+  componentDidUpdate(prevProps) {
+    // 수정 모드이고, boardId가 변경되었다면 그 글의 내용을 조회(datail 함수 실행)하자는 내용
+    if (this.props.isComplete !== prevProps.isComplete) {
+      this.getList();
+    }
+  }
+
   render() {
     console.log(this.state.BoardList);
     return (

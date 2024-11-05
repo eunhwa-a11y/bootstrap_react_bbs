@@ -28,14 +28,23 @@ export default class App extends Component {
     })
   }
 
+  handleCancel = () => {
+    this.setState({
+      isModifyMode : false,
+      isComplete : false,
+      boardId : 0
+    })
+  }
+
   render() {
     return (
       <div className="container mt-3">
         <h1 className="mb-3">React Board</h1>
-        <BoardList handleModify={this.handleModify} />
+        <BoardList isComplete={this.state.isComplete} handleModify={this.handleModify} />
         <Write
           isModifyMode={this.state.isModifyMode}
           boardId = {this.state.boardId}
+          handleCancel = {this.handleCancel}
         />
       </div>
     )
