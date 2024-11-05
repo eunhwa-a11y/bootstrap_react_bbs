@@ -45,7 +45,6 @@ export default class Write extends Component {
         // 에러 핸들링
         console.log(e);
       });
-
   };
 
   detail = () => {
