@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
+import { Navigate, Link } from "react-router-dom";
 
 export default class Write extends Component {
   // Update.js를 만들지 않고 수정할 때 사용 예정
@@ -9,7 +10,9 @@ export default class Write extends Component {
     isModifyMode: false,
     title: '',
     content: '',
+    redirect:false // 주소 변경 상태 추가(변경을 할지 말지)
   };
+
   write = (e) => {
     e.preventDefault();
     Axios.post('http://localhost:8000/insert', {
@@ -17,7 +20,10 @@ export default class Write extends Component {
       content: this.state.content
     }) // 요청을 보냄
     .then((res) => {
-      console.log(res);
+      // window.location = 'http://localhost:3000/';
+      this.setState({
+        redirect : true
+      })
     })
     .catch((e) => {
       // 에러 핸들링
@@ -76,6 +82,13 @@ export default class Write extends Component {
     }
   }
 
+  componentDidMount() {
+    // 수정 모드이고, boardId가 변경되었다면 그 글의 내용을 조회(datail 함수 실행)하자는 내용
+    if (this.props.isModifyMode) {
+      this.detail();
+    }
+  }
+
   handleChange = (e) => {
     this.setState({
       // title: e.target.value
@@ -85,6 +98,9 @@ export default class Write extends Component {
   }
 
   render() {
+    if(this.state.redirect){
+      return <Navigate to = "/" />;
+    }
     return (
       <Form>
         <Form.Group className="mb-3" controlId="title">
@@ -96,10 +112,8 @@ export default class Write extends Component {
           <Form.Control as="textarea" name="content" value={this.state.content} rows={3} onChange={this.handleChange} />
         </Form.Group>
         <div className="d-flex gap-1">
-        <Button variant="primary" type="submit" onClick={this.state.isModifyMode ? this.update : this.write}>{this.state.isModifyMode ? '수정완료' : '입력완료'}</Button>
-          <Button variant="secondary" type="reset">
-            취소
-          </Button>
+          <Button variant="primary" type="submit" onClick={this.state.isModifyMode ? this.update : this.write}>{this.state.isModifyMode ? '수정완료' : '입력완료'}</Button>
+          <Link to="/" className="btn btn-secondary">취소</Link>
         </div>
       </Form>
     );

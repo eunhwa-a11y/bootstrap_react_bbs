@@ -4,6 +4,9 @@ import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import Axios from "axios";
 
+import { Link } from "react-router-dom";
+
+
 /*
 const submitText = () => {
   // react가 서버로 요청을 보내고, 그 결과를 출력
@@ -37,7 +40,7 @@ class Board extends Component {
           />
         </td>
         <td>{this.props.id}</td>
-        <td>{this.props.title}</td>
+        <td><Link to={`/view?id=${this.props.id}`}>{this.props.title}</Link></td>
         <td>{this.props.registerId}</td>
         <td>{this.props.date}</td>
       </tr>
@@ -155,7 +158,7 @@ handleDelete = () => {
           </tbody>
         </Table>
         <div className="d-flex gap-1">
-          <Button variant="primary">글쓰기</Button>
+          <Link to="/Write" className="btn btn-primary">글쓰기</Link>
           <Button variant="secondary" onClick={() => {
             this.props.handleModify(this.state.checkList);
           }}>수정하기</Button>
